@@ -42,142 +42,49 @@ Point it at a YouTube channel. Give it your gameplay clips and a track. It does 
           │
           ▼
 🔍  STEP 1 — STYLE ANALYZER
-    Agent downloads and studies the creator's videos
-    Learns: cuts per minute, transition types, pacing, vibe
-    Output: style_profile.json
-          │
-          ▼
-🎵  STEP 2 — BEAT DETECTOR
-    Agent scans the music file for beat timestamps
-    Identifies drop points and rhythm peaks
-    Output: beat_timeline.json
-          │
-          ▼
-✂️  STEP 3 — CLIP SELECTOR
-    Agent scans raw gameplay for highlight moments
-    Detects kill moments via motion spike analysis
-    Output: selected_clips[]
-          │
-          ▼
-🎬  STEP 4 — VIDEO EDITOR
-    Agent snaps selected clips to beat timestamps
-    Applies transitions matching creator's style
-    Output: killframe_montage.mp4
-          │
-          ▼
-🏆  OUTPUT: 30-second Beat-Synced Free Fire Montage
+    # 🎮 KILLFRAME-AGENT
 
-```
+    ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python) ![FFmpeg](https://img.shields.io/badge/FFmpeg-required-red?style=for-the-badge) ![Groq](https://img.shields.io/badge/Groq-LLM-blue?style=for-the-badge)
 
----
+    Built for Microsoft Agents League Hackathon 2026 — Creative Apps Track
 
-## 🎯 The Problem
+    ---
 
-Free Fire has **500 million downloads** worldwide and thousands of active content creators producing montage videos daily. Yet:
+    ## How it works (4 steps)
 
-- ❌ No AI tools exist specifically for Free Fire montage editing
-- ❌ Creators spend hours manually syncing cuts to beats
-- ❌ Beginners can't replicate pro editing styles
-- ❌ Expensive software locks out most creators in emerging markets
+    1. Analyze: `style_analyzer` inspects a creator's YouTube metadata to infer editing style.
+    2. Detect: `beat_detector` finds beat timestamps from the music track.
+    3. Select: `clip_selector` ranks gameplay clips by motion intensity and selects highlights.
+    4. Edit: `video_editor` trims and concatenates clips to produce a beat-synced montage.
 
-**KILLFRAME-AGENT solves all of this — for free.**
+    ---
 
----
+    ## Tech stack
 
-## ✅ The Solution
+    | Tool | Purpose |
+    |---|---|
+    | Python | Core language |
+    | yt-dlp | YouTube metadata/downloads |
+    | librosa | Audio beat detection |
+    | moviepy | Video editing |
+    | ffmpeg | Encoding and processing |
+    | Groq API | LLM style analysis |
+    | GitHub Copilot | Development assistant |
 
-An agentic pipeline that:
+    ---
 
-- 📺 **Watches** — analyzes any Free Fire YouTube creator's style
-- 🧠 **Learns** — builds a style profile from their editing patterns
-- ✂️ **Edits** — auto-cuts your footage to the beat matching that style
-- 🎬 **Exports** — outputs a ready-to-upload montage MP4
+    ## Quick run (3 commands)
 
----
+    ```powershell
+    pip install -r requirements.txt
+    python demo.py --youtube "https://www.youtube.com/@RuokFF" --footage "./test_footage" --music "./test_music.mp3" --output "./demo_montage.mp4"
+    ```
 
-## 🛠️ Tech Stack
+    Demo video link: Demo video link here
 
-| Tool | Purpose |
-|---|---|
-| **GitHub Copilot** | AI-assisted development throughout |
-| **Python 3.10+** | Core agent language |
-| **yt-dlp** | YouTube video downloading & analysis |
-| **librosa** | Beat detection & audio analysis |
-| **moviepy** | Video editing & montage assembly |
-| **FFmpeg** | Video processing & encoding |
-| **Groq API (free)** | LLM-powered style analysis brain |
-| **requests** | API communication |
+    ---
 
----
-
-## 🚀 Quick Demo Setup & Run
-
-### Prerequisites
-Install Python 3.10+ and `ffmpeg` on Windows. You can install `ffmpeg` using Chocolatey or winget, or add a local ffmpeg binary to your PATH.
-
-### Installation
-```powershell
-git clone https://github.com/Appdeloper/KILLFRAME-AGENT.git
-cd "KILLFRAME AGENT"
-pip install -r requirements.txt
-```
-
-### Configure Environment
-Create a `.env` file in the repo root with your Groq API key:
-
-```
-GROQ_API_KEY=your_key_here
-```
-
-### Run a Quick Demo
-This repository includes a one-click demo script for judges.
-
-```powershell
-python demo.py --youtube "https://www.youtube.com/@RuokFF" --footage "./test_footage" --music "./test_music.mp3" --output "./demo_montage.mp4"
-```
-
-Or double-click `demo.bat` on Windows.
-
----
-
-## 📁 Project Structure
-
-```
-KILLFRAME-AGENT/
-│
-├── agent.py                  # Main agent pipeline entry point
-├── requirements.txt          # Python dependencies
-├── .env.example              # Environment variable template
-├── README.md                 # You are here
-│
-└── modules/
-    ├── style_analyzer.py     # YouTube creator style analysis
-    ├── beat_detector.py      # Music beat detection & timestamps
-    ├── clip_selector.py      # Gameplay highlight selection
-    └── video_editor.py       # Final montage assembly & export
-```
-
----
-
-## 🎮 Why Free Fire?
-
-Free Fire is the **most downloaded mobile game** in history across emerging markets — India, Brazil, Southeast Asia. The creator economy around it is massive yet completely underserved by AI tools.
-
-KILLFRAME-AGENT targets this gap directly: a powerful, **free** tool built for the millions of creators who can't afford expensive editing software but want pro-quality results.
-
----
-
-## 🏆 Built For
-
-**Microsoft Agents League Hackathon 2026**
-Track: **Creative Apps**
-Tool: **GitHub Copilot**
-
-This project demonstrates agentic AI by chaining four autonomous reasoning steps — analyze, detect, select, edit — into a single pipeline that takes a creative brief and produces a finished output with no human intervention.
-
----
-
-## 🔮 Future Vision
+    For full development docs and API key setup, see `DEMO.md` and the repository files.
 
 - [ ] Support for multiple games (Valorant, BGMI, COD Mobile)
 - [ ] Style presets from top 100 gaming creators
