@@ -1,6 +1,6 @@
 # 🎮 KILLFRAME-AGENT
 
-> **KILLFRAME-AGENT is an autonomous AI agent built for the Microsoft Agents League Hackathon that watches, learns, and edits like a pro gaming content creator — automatically.**
+> **An autonomous AI gaming montage editor built for the Microsoft Agents League Hackathon that watches, learns, and edits like a professional content creator — 100% Free, Offline-Ready, and API Key Optional.**
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
 ![GitHub Copilot](https://img.shields.io/badge/Built%20With-GitHub%20Copilot-black?style=for-the-badge&logo=github)
@@ -9,160 +9,138 @@
 
 ---
 
-## 🔥 What Is KILLFRAME-AGENT?
+## 🚀 Hackathon Quick Start (Zero-Setup Mode)
+**KILLFRAME-AGENT runs completely for FREE. API keys are 100% optional!**
+* **No API Key Required**: The agent runs out-of-the-box using the pre-cached style database (`style_intelligence.json`) or falls back to a built-in Free Fire style profile.
+* **No Complex Setup**: Pre-configured with dynamic dependency validation and self-healing.
 
-KILLFRAME-AGENT is the **ultimate autonomous AI gaming montage editor** that watches, learns, and edits like a pro gaming content creator — automatically. Built for Free Fire creators, it studies a reference YouTube video, learns the editing style across a 100-video intelligence database, runs a 7-signal computer vision pipeline to extract raw gameplay highlights, syncs cuts to music beats using advanced DSP, and exports a professionally color-graded montage in seconds.
+### ⚡ 3-Step Execution:
+1. **Prerequisites**: Ensure Python 3.10+ and `ffmpeg` (added to your system PATH) are installed.
+2. **Install**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. **Launch the Wizard**:
+   ```bash
+   python run.py
+   ```
+   * *Step 1*: Press **ENTER** to run in Free Mode (no API key needed).
+   * *Step 2*: Press **ENTER** to use the default pro reference video style.
+   * *Step 3*: Choose **S** to skip learning and use cached intelligence.
+   * *Step 4*: Provide raw gameplay MP4 path (e.g. `test_footage/2026-06-12 00-48-09.mp4`).
+   * *Step 5*: Choose option **1** to auto-extract the music track from the reference.
+   * *Step 6*: Choose output duration (e.g. 1 minute or standard montage).
+   * *Step 7*: Press **ENTER** to generate. The agent will output `killframe_output.mp4`!
 
 ---
 
-## ✨ Features & Master Modules
+## 🔥 What is KILLFRAME-AGENT?
 
-### 📺 100-Video AI Learning Engine (`modules/youtube_learner.py`)
-- **Deep Style Analysis**: Automatically downloads, scans, and analyzes up to 100 YouTube montage videos to learn optimal cuts per minute, clip pacing, transition flashes, and color saturation.
-- **Intelligence Caching**: Compiles and caches unified style intelligence to `style_intelligence.json` for instant subsequent runs, supporting full relearning cycles.
+KILLFRAME-AGENT is an autonomous, end-to-end agentic editing pipeline tailored for gaming creators. Mobile games like **Free Fire** have massive player bases across emerging markets (India, Brazil, Southeast Asia) where creators lack access to high-end editing software or expensive AI API credits. 
 
-### 🔍 7-Signal Military-Grade Kill Detection (`modules/clip_selector.py`)
-- **Computer Vision Pipeline**: Evaluates frames using 7 distinct signals to isolate raw gameplay highlights:
-  1. *Kill Feed Activity*: Red-ratio analysis in the top-right kill-feed zone.
-  2. *Screen Flash*: Sudden brightness boosts denoting shots fired.
-  3. *Frame Difference Motion*: Structural change indicators.
-  4. *Optimized Dense Optical Flow*: Farneback flow on resized `480x270` frames for high performance (15x faster scan).
-  5. *Gun Recoil*: Frame deviation analysis in the weapon viewport area.
-  6. *Edge Contours*: Canny edge contour distribution changes.
-  7. *Hit Marker Highlights*: Target-center red flash detection.
-- **Smart Cooldown & Deduplication**: Merges overlapping events and avoids duplicate clips within 2 seconds.
+KILLFRAME-AGENT solves this by providing a professional-grade editor that runs entirely on local consumer hardware. It ingests raw gameplay, extracts peak action highlight clips, aligns them to background beats with microsecond precision, grades the colors to make them pop, and exports a ready-to-share montage video.
 
-### 🎵 Librosa HPSS Beat & Bass Drop Sync (`modules/beat_detector.py`)
-- **Audio Stem Separation**: Performs Harmonic-Percussive Source Separation (HPSS) to extract rhythmic frames from melody.
-- **Advanced Rhythm Analysis**: Tracks tempo (BPM), onset envelopes, buildup energy maps, strong beats, and bass drops using signal peak analysis (`scipy.signal`).
-- **Modern Compatibility**: Fully supports Librosa 0.10+ numpy-scalar conversions.
+---
 
-### 🎬 Hollywood Cinematic Grading (`modules/video_editor.py`)
-- **Color Correction**: Applies custom brightness scaling, contrast scaling, saturation boosters, and cinematic vignettes.
-- **Beat-Synced Rendering**: Concatenates clips with custom white flash transitions synced precisely to music beats and bass drops.
-- **Process Cleanup**: Calls explicit moviepy garbage collection to free file locks.
+## 🧠 Complete Agentic Architecture
 
-### 💬 Interactive Configuration Wizard (`run.py` & `start.bat`)
-- **One-Click Startup**: Launch `start.bat` to boot the interactive wizard.
-- **Interactive Prompts**: Guides the user through API key setup, reference YouTube video selection, drag-and-drop raw footage path, background music path, output duration presets (30s to 10m), and custom filenames.
-- **Step 0 Learning Menu**: Allows toggling between full 100-video learning (`L`) or using pre-trained cache intelligence (`S`) for instant generation.
+The agent performs work through a multi-stage execution pipeline, coordinating specialized modules:
+
+```mermaid
+graph TD
+    A[Raw Video + Music Input] --> B[Validator Module]
+    B --> C[Style Analyzer]
+    C -->|Use Cache/Defaults| D[Gameplay Highlight Scanner]
+    C -->|Optional LLM Call| D
+    D -->|7-Signal CV Scanner| E[Percussive Beat Detector]
+    E -->|Librosa HPSS beat-tracking| F[Video Editor Assembly]
+    F -->|True Beat-Kill Sync + Color Grading| G[Final Montage Export]
+    G --> B
+```
+
+### 1. 🛡️ Pipeline Sanitization (`modules/validator.py`)
+To prevent crashes during long render jobs, a self-healing validator runs checks before, during, and after execution:
+* Assures input gameplay file exists, has valid codecs, and is readable.
+* Checks audio duration and handles alignment issues.
+* Automatically repairs folders and resolves file locking issues during MoviePy processing.
+
+### 2. 📺 Creators Learning Engine (`modules/youtube_learner.py` & `style_analyzer.py`)
+* **Dual Execution Modes**:
+  * **Free Mode (Default)**: Uses pre-trained creator intelligence cached in `style_intelligence.json` or falls back to a custom Free Fire profile.
+  * **AI-Enhanced Mode**: Reads keys from `.env` to query LLMs (Gemini, Groq, OpenAI, Anthropic) to extract pacing and vibe dynamics from any reference video.
+* **Smart Downloader**: Automatically downloads reference videos using `yt-dlp` for local color histogram and pacing analysis.
+
+### 3. 🔍 7-Signal Highlight Selector (`modules/clip_selector.py`)
+Scans raw gameplay using advanced computer vision to find highlights. It calculates a frame action score based on:
+1. **Kill Feed Detection**: Red pixel density in the kill notification zone.
+2. **Screen Flash**: Sharp brightness changes marking muzzle flash.
+3. **Motion Flow**: Frame difference average representing movement activity.
+4. **Resized Optical Flow**: Farneback dense optical flow calculated on resized `480x270` frames for a 15x scanning speed improvement.
+5. **Gun Recoil**: Directional shifts in the weapon viewport zone.
+6. **Contour Density**: Edge count distribution changes.
+7. **Hit Markers**: Center-screen impact indicators.
+* *Smart Cooldown*: Merges consecutive events and avoids redundant clips.
+
+### 4. 🎵 Percussive Beat Sync (`modules/beat_detector.py`)
+* **Rhythmic Separation**: Uses Harmonic-Percussive Source Separation (HPSS) to extract rhythm transients from melody.
+* **Beat Mapping**: Tracks tempo (BPM) and onset envelopes to map beat drops.
+* **Bass Drops**: Automatically tracks bass drop energy to highlight premium kills.
+
+### 5. 🎬 True Beat-Kill Editor (`modules/video_editor.py`)
+* **Exact Synchronization**: Trims and offsets footage so the actual kill frame aligns **perfectly on the beat drop** (positioning the kill at exactly `0.3s` from start of the clip).
+* **Cinematic Color Grading**: Boosts contrast (`1.25`) and saturation (`1.35`) and lifts reds and greens to give that vibrant gaming montage aesthetic.
+* **Transitions**: Inserts white flash transitions synced with beat events.
+* **Automatic Scaling**: Loops and pads clips to dynamically match the target output duration (up to 8 minutes).
 
 ---
 
 ## 🛠 Tech Stack
 
-| Tool | Purpose |
-|---|---|
-| Python | Core language |
-| OpenCV | Computer vision & frame-level signal extraction |
-| Librosa & SciPy | HPSS separation, tempo tracking & peak frequency detection |
-| MoviePy & FFmpeg | Frame compositing, rendering, and encoding |
-| Multi-LLM | Gemini, OpenAI, Groq, or Anthropic style profiling support |
-| GitHub Copilot | Development assistant |
+| Component | Technology | Rationale |
+|---|---|---|
+| **Core** | Python 3.10+ | Robust agent runtime & package eco-system. |
+| **Vision** | OpenCV (cv2) | Frame-by-frame highlight scanning and recoil tracking. |
+| **DSP** | Librosa & SciPy | Audio separation, BPM mapping, and beat envelope analysis. |
+| **Rendering** | MoviePy & FFmpeg | Audio/video mixing, transitions, and high-quality CRF 17 exports. |
+| **Orchestration** | Multi-LLM | Optional AI style analysis using Gemini, Claude, GPT, or Llama. |
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-```bash
-python 3.10+
-ffmpeg installed on system and added to PATH
-```
-
-### Installation
-```bash
-# Clone the repo
-git clone https://github.com/Appdeloper/KILLFRAME-AGENT.git
-cd KILLFRAME-AGENT
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-### Run The Wizard (Interactive Mode)
-Simply double-click `start.bat` or run:
-```bash
-python run.py
-```
-
-### Run The Agent (CLI Mode)
-```bash
-python agent.py \
-  --youtube "https://www.youtube.com/watch?v=NwV3DjiXmms" \
-  --footage "./test_footage" \
-  --music "./real_music.mp3" \
-  --output "./pro_montage.mp4" \
-  --duration 60
-```
-
----
-
-## 🔐 Security
-
-KILLFRAME-AGENT never stores or exposes your API key:
-- Key is entered securely via hidden prompt (like a password)
-- Stored only in local `.env` file
-- `.env` is in `.gitignore` — NEVER pushed to GitHub
-- Key is never printed or logged anywhere
-- Works with Gemini, OpenAI, Groq, or Anthropic keys
-
----
-
-## 📁 Project Structure
+## 📁 Repository Structure
 
 ```
 KILLFRAME-AGENT/
 │
-├── agent.py                  # Main agent pipeline entry point
-├── requirements.txt          # Python dependencies
-├── .env.example              # Environment variable template
-├── README.md                 # You are here
+├── agent.py                 # Primary pipeline coordinator (runs step-by-step)
+├── run.py                   # Step-by-step wizard UI (Console/Terminal)
+├── check.py                 # Health and dependency check tool
+├── requirements.txt         # Package dependencies
+├── style_intelligence.json  # Pre-compiled style data (enables Free Mode)
 │
 └── modules/
-    ├── style_analyzer.py     # YouTube creator style analysis
-    ├── beat_detector.py      # Music beat detection & timestamps
-    ├── clip_selector.py      # Gameplay highlight selection
-    ├── video_editor.py       # Final montage assembly & export
-    └── key_manager.py        # Secure API key manager
+    ├── validator.py         # Full pipeline validation and self-healing
+    ├── style_analyzer.py    # Fallback/cache styles and optional LLM analysis
+    ├── clip_selector.py     # 7-signal action highlight extractor
+    ├── beat_detector.py     # Librosa percussive beat tracking
+    ├── video_editor.py      # Assembly, true sync, and Hollywood grading
+    ├── song_extractor.py    # Extracts and downloads song from reference
+    ├── color_analyzer.py    # Ref video color palette extraction
+    └── key_manager.py       # Local API credential manager
 ```
 
 ---
 
-## 🎮 Why Free Fire?
-
-Free Fire is the **most downloaded mobile game** in history across emerging markets — India, Brazil, Southeast Asia. The creator economy around it is massive yet completely underserved by AI tools.
-
-KILLFRAME-AGENT targets this gap directly: a powerful, **free** tool built for the millions of creators who can't afford expensive editing software but want pro-quality results.
+## 🛡️ Console Compatibility & Robust Logging
+Designed to run on all platforms, including Windows consoles set to regional page codes like CP1252. The logs are stripped of emojis and special characters, using standardized `[OK]`, `[FAIL]`, and `[INFO]` ASCII tags to prevent console encoding crashes.
 
 ---
 
-## 🏆 Built For
-
-**Microsoft Agents League Hackathon 2026**
-Track: **Creative Apps**
-Tool: **GitHub Copilot**
-
-This project demonstrates agentic AI by chaining four autonomous reasoning steps — analyze, detect, select, edit — into a single pipeline that takes a creative brief and produces a finished output with no human intervention.
-
----
-
-## 🔮 Future Vision
-
-- [ ] Support for multiple games (Valorant, BGMI, COD Mobile)
-- [ ] Style presets from top 100 gaming creators
-- [ ] Real-time clip suggestion during live gameplay
-- [ ] Direct upload to YouTube & Instagram Reels
-- [ ] Web UI for non-technical creators
-
----
-
-## 👤 Author
-
-Built with 🔥 for the Microsoft Agents League Hackathon 2026.
+## 🏆 Hackathon Details
+* **Hackathon**: Microsoft Agents League Hackathon 2026
+* **Track**: Creative Apps
+* **Development Tool**: GitHub Copilot
 
 ---
 
 ## 📄 License
-
-MIT License — free to use, modify, and distribute.
+This project is licensed under the MIT License — free to use, edit, and distribute.
