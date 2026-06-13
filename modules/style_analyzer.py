@@ -86,7 +86,7 @@ def download_reference(youtube_url):
     """Download reference video for color analysis — no API needed"""
     ref_path = "reference_style.mp4"
     if os.path.exists(ref_path) and os.path.getsize(ref_path) > 100000:
-        print("[KILLFRAME] Using cached reference video")
+        print("[VOLTCUT] Using cached reference video")
         return ref_path
     try:
         import yt_dlp
@@ -98,10 +98,10 @@ def download_reference(youtube_url):
         }
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([youtube_url])
-        print(f"[KILLFRAME] Reference downloaded")
+        print(f"[VOLTCUT] Reference downloaded")
         return ref_path
     except Exception as e:
-        print(f"[KILLFRAME] Reference download skipped: {e}")
+        print(f"[VOLTCUT] Reference download skipped: {e}")
         return None
 
 def get_default_ff_style():
@@ -140,9 +140,9 @@ def get_ai_style(youtube_url, api_key):
     try:
         ai_analysis = get_ai_analysis(youtube_url, api_key)
         master_style.update({k:v for k,v in ai_analysis.items() if v is not None})
-        print("[KILLFRAME] AI analysis merged with learned intelligence")
+        print("[VOLTCUT] AI analysis merged with learned intelligence")
     except Exception as e:
-        print(f"[KILLFRAME] AI enhancement skipped: {e}")
+        print(f"[VOLTCUT] AI enhancement skipped: {e}")
     
     # Extract song from reference
     try:
@@ -153,7 +153,7 @@ def get_ai_style(youtube_url, api_key):
             if song_path:
                 master_style["reference_song_path"] = song_path
     except Exception as e:
-        print(f"[KILLFRAME] Song extraction skipped: {e}")
+        print(f"[VOLTCUT] Song extraction skipped: {e}")
 
     master_style["reference_video_path"] = download_reference(youtube_url)
     return master_style
@@ -172,7 +172,7 @@ def analyze_style(youtube_url):
     if is_test and "GROQ_API_KEY" not in os.environ:
         raise KeyError("GROQ_API_KEY")
 
-    print("[KILLFRAME] Analyzing style...")
+    print("[VOLTCUT] Analyzing style...")
 
     # Try cache first — no API needed
     if os.path.exists("style_intelligence.json"):
@@ -182,7 +182,7 @@ def analyze_style(youtube_url):
             style = cache.get("master_style", {})
             if style:
                 count = style.get("learned_from_videos", 0)
-                print(f"[KILLFRAME] Using learned intelligence from {count} videos")
+                print(f"[VOLTCUT] Using learned intelligence from {count} videos")
                 style["reference_video_path"] = download_reference(youtube_url)
                 return style
         except:
@@ -198,14 +198,14 @@ def analyze_style(youtube_url):
 
     if api_key and len(api_key) > 10:
         try:
-            print("[KILLFRAME] API key found — using AI analysis")
+            print("[VOLTCUT] API key found — using AI analysis")
             return get_ai_style(youtube_url, api_key)
         except Exception as e:
-            print(f"[KILLFRAME] AI analysis failed: {e}")
-            print("[KILLFRAME] Falling back to default style")
+            print(f"[VOLTCUT] AI analysis failed: {e}")
+            print("[VOLTCUT] Falling back to default style")
 
     # No API key — use default profile
-    print("[KILLFRAME] No API key — using built-in Free Fire style")
+    print("[VOLTCUT] No API key — using built-in Free Fire style")
     style = get_default_ff_style()
     style["reference_video_path"] = download_reference(youtube_url)
     return style

@@ -26,12 +26,12 @@ def get_api_key():
         key = os.getenv(key_name)
         if key and len(key) > 10:
             provider = detect_provider(key)
-            print(f"[KILLFRAME] API Provider: {provider.upper()} [OK]")
+            print(f"[VOLTCUT] API Provider: {provider.upper()} [OK]")
             return key, provider
 
     # No key found — prompt user securely
     print("\n" + "="*55)
-    print("  KILLFRAME-AGENT - First Time Setup")
+    print("  VOLTCUT-AGENT - First Time Setup")
     print("="*55)
     print("  No API key found. Please enter one below.")
     print()
@@ -63,8 +63,8 @@ def get_api_key():
         ENV_FILE.touch(exist_ok=True)
         set_key(str(ENV_FILE), key_name, api_key)
 
-        print(f"\n  [KILLFRAME] [OK] {provider.upper()} key saved securely!")
-        print(f"  [KILLFRAME] Key stored in .env (never pushed to GitHub)")
+        print(f"\n  [VOLTCUT] [OK] {provider.upper()} key saved securely!")
+        print(f"  [VOLTCUT] Key stored in .env (never pushed to GitHub)")
         print("="*55 + "\n")
         return api_key, provider
 
@@ -73,14 +73,14 @@ def clear_api_key():
     load_dotenv(ENV_FILE)
     for key_name in KEY_NAMES:
         set_key(str(ENV_FILE), key_name, "")
-    print("[KILLFRAME] All API keys cleared from .env")
+    print("[VOLTCUT] All API keys cleared from .env")
 
 def validate_key(api_key, provider):
     """Test if key works before running full pipeline"""
     if "dummy" in api_key.lower() or "test" in api_key.lower():
-        print(f"[KILLFRAME] [OK] Dummy/test key detected - bypassing validation.")
+        print(f"[VOLTCUT] [OK] Dummy/test key detected - bypassing validation.")
         return True
-    print(f"[KILLFRAME] Validating {provider.upper()} key...")
+    print(f"[VOLTCUT] Validating {provider.upper()} key...")
     try:
         if provider == "gemini":
             import google.generativeai as genai
@@ -111,10 +111,10 @@ def validate_key(api_key, provider):
                 max_tokens=5,
                 messages=[{"role": "user", "content": "Hi"}]
             )
-        print(f"[KILLFRAME] [OK] Key valid!")
+        print(f"[VOLTCUT] [OK] Key valid!")
         return True
     except Exception as e:
-        print(f"[KILLFRAME] [ERROR] Key invalid: {str(e)[:100]}")
+        print(f"[VOLTCUT] [ERROR] Key invalid: {str(e)[:100]}")
         # Delete bad key from .env and active environment
         for key_name in KEY_NAMES:
             if key_name in os.environ:

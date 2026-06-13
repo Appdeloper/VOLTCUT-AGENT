@@ -1,29 +1,31 @@
-Project: KILLFRAME-AGENT
+# VOLTCUT-AGENT — Hackathon Submission
 
-Track: Creative Apps
+**Project Name:** VOLTCUT-AGENT
+**Track:** Creative Apps
+**Tool:** GitHub Copilot
 
-Tool used: GitHub Copilot
+## Problem
+Gaming creators spend 3-4 hours manually editing every montage.
+3 billion gamers. 50 million creators. Zero AI tools for them.
 
-Problem statement:
-Free Fire creators spend hours manually editing montage videos and syncing cuts to music, which is time-consuming and inaccessible to beginners.
+## Solution
+VOLTCUT-AGENT — autonomous AI that analyzes any gaming creator's
+style and auto-produces beat-synced kill montages. Any game.
+Any creator. Zero editing. Completely free.
 
-Solution:
-An autonomous AI agent that analyzes a creator's style and automatically produces beat-synced montages from raw gameplay footage.
+## How It Is Agentic
+Four autonomous reasoning steps — analyze, detect, select, edit —
+chained into one pipeline. Zero human input between steps.
+The agent makes all decisions independently.
 
-Agentic workflow:
-1. Analyze — `style_analyzer` inspects YouTube metadata and builds a style profile.
-2. Detect — `beat_detector` finds beat timestamps in the music.
-3. Select — `clip_selector` ranks and chooses highlight clips based on motion.
-4. Edit — `video_editor` trims and concatenates clips into the final montage.
+## Tech Stack
+Python, GitHub Copilot, yt-dlp, librosa, OpenCV, MoviePy,
+FFmpeg, scipy, Gemini/Groq API (optional)
 
-Tech stack:
-Python, yt-dlp, librosa, moviepy, ffmpeg, Groq API, GitHub Copilot
+## Market
+3 billion+ gamers, 50 million+ creators, $250B industry.
+First AI montage editor built for any game.
 
-Market size:
-Free Fire has 500 million downloads and thousands of active creators who would benefit from automated editing tools.
-
-Future vision:
-- Support multiple games (Valorant, COD Mobile, BGMI)
-- Web UI for non-technical creators
-- Direct upload to YouTube and social platforms
-
+## Future Vision
+Web UI, mobile app, direct YouTube upload, live kill detection,
+style presets from top 100 creators globally.

@@ -1,5 +1,5 @@
 """
-KILLFRAME-AGENT Pipeline Validator
+VOLTCUT-AGENT Pipeline Validator
 Validates every single step before and after execution.
 If anything is wrong it fixes it automatically.
 Never lets bad output through.

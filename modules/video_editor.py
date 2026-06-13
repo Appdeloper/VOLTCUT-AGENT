@@ -52,7 +52,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
             clip_data.append({"path":c,"kill_offset":1.0,"score":0})
 
     if not clip_data:
-        print("[KILLFRAME] [ERROR] No clips to edit")
+        print("[VOLTCUT] [ERROR] No clips to edit")
         raise ValueError("No clips to edit")
 
     # Get beats
@@ -72,7 +72,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
         from modules.color_analyzer import extract_reference_lut, apply_reference_grade, get_default_grade
         if reference_video_path and os.path.exists(reference_video_path):
             grade = extract_reference_lut(reference_video_path)
-            print("[KILLFRAME] Reference color grade loaded")
+            print("[VOLTCUT] Reference color grade loaded")
         else:
             grade = get_default_grade()
     except:
@@ -106,7 +106,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
         except:
             return frame
 
-    print(f"[KILLFRAME] Loading {len(clip_data)} clips...")
+    print(f"[VOLTCUT] Loading {len(clip_data)} clips...")
     loaded = []
 
     # Sort — highest score kills go to bass drops
@@ -117,7 +117,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
     approx_clip_dur = beat_gap + 0.06
     clips_needed_to_fill = int(output_duration / approx_clip_dur) + 1
     if len(clip_data) < clips_needed_to_fill:
-        print(f"[KILLFRAME] Looping clip data to fill target duration: need {clips_needed_to_fill}, have {len(clip_data)}")
+        print(f"[VOLTCUT] Looping clip data to fill target duration: need {clips_needed_to_fill}, have {len(clip_data)}")
         original_clip_data = list(clip_data)
         while len(clip_data) < clips_needed_to_fill:
             clip_data.extend(original_clip_data)
@@ -129,7 +129,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
         clip = None
         try:
             if not os.path.exists(path):
-                print(f"[KILLFRAME] [ERROR] Missing: {path}")
+                print(f"[VOLTCUT] [ERROR] Missing: {path}")
                 continue
             clip = VideoFileClip(path)
             if clip.duration < 0.3:
@@ -159,19 +159,19 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
 
             loaded.append(clip)
             btype = "DROP" if is_drop else "BEAT"
-            print(f"[KILLFRAME] [OK] {i+1:03d}/{len(clip_data)} | {btype} | {trim_end-trim_start:.2f}s")
+            print(f"[VOLTCUT] [OK] {i+1:03d}/{len(clip_data)} | {btype} | {trim_end-trim_start:.2f}s")
 
         except Exception as e:
-            print(f"[KILLFRAME] [ERROR] Clip {i+1} error: {e}")
+            print(f"[VOLTCUT] [ERROR] Clip {i+1} error: {e}")
             if clip:
                 try: clip.close()
                 except: pass
 
     if not loaded:
-        print("[KILLFRAME] [ERROR] No clips loaded — check footage")
+        print("[VOLTCUT] [ERROR] No clips loaded — check footage")
         raise ValueError("No clips loaded")
 
-    print(f"[KILLFRAME] Building {len(loaded)} clip montage...")
+    print(f"[VOLTCUT] Building {len(loaded)} clip montage...")
 
     # Build with flash transitions
     final_clips = []
@@ -187,31 +187,31 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
     try:
         final_video = concatenate_videoclips(final_clips, method="compose")
     except Exception as e:
-        print(f"[KILLFRAME] Compose failed: {e} — trying chain")
+        print(f"[VOLTCUT] Compose failed: {e} — trying chain")
         try:
             final_video = concatenate_videoclips(loaded, method="chain")
         except Exception as e2:
-            print(f"[KILLFRAME] [ERROR] Cannot concatenate: {e2}")
+            print(f"[VOLTCUT] [ERROR] Cannot concatenate: {e2}")
             for c in loaded:
                 try: c.close()
                 except: pass
             return
 
-    print(f"[KILLFRAME] Montage: {final_video.duration:.2f}s | {len(loaded)} clips")
+    print(f"[VOLTCUT] Montage: {final_video.duration:.2f}s | {len(loaded)} clips")
 
     # Add music
     if music_path and music_path not in ["AUTO",""] and os.path.exists(music_path):
         try:
             audio = AudioFileClip(music_path)
-            print(f"[KILLFRAME] Music: {audio.duration:.1f}s")
+            print(f"[VOLTCUT] Music: {audio.duration:.1f}s")
             if audio.duration < final_video.duration:
                 loops = int(final_video.duration/audio.duration)+2
                 audio = concatenate_audioclips([audio]*loops)
             audio = audio.subclip(0, final_video.duration).volumex(0.88)
             final_video = final_video.set_audio(audio)
-            print("[KILLFRAME] [OK] Music synced")
+            print("[VOLTCUT] [OK] Music synced")
         except Exception as e:
-            print(f"[KILLFRAME] Music error: {e}")
+            print(f"[VOLTCUT] Music error: {e}")
 
     # Export — 3 quality fallbacks
     configs = [
@@ -226,28 +226,28 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
     exported = False
     for cfg in configs:
         try:
-            print(f"[KILLFRAME] Exporting: {cfg['preset']} | {cfg['bitrate']}")
+            print(f"[VOLTCUT] Exporting: {cfg['preset']} | {cfg['bitrate']}")
             final_video.write_videofile(output_path, **cfg)
             if os.path.exists(output_path) and os.path.getsize(output_path)>100000:
                 mb = os.path.getsize(output_path)/(1024*1024)
-                print(f"[KILLFRAME] ----------------------------------")
-                print(f"[KILLFRAME]   [OK] MONTAGE COMPLETE")
-                print(f"[KILLFRAME]   Clips      : {len(loaded)}")
-                print(f"[KILLFRAME]   Duration   : {final_video.duration:.1f}s")
-                print(f"[KILLFRAME]   Size       : {mb:.1f}MB")
-                print(f"[KILLFRAME]   Quality    : {cfg['bitrate']} {cfg['preset']}")
-                print(f"[KILLFRAME]   Beat sync  : TRUE — kills on beats")
-                print(f"[KILLFRAME]   Color grade: YES")
-                print(f"[KILLFRAME]   Music      : YES")
-                print(f"[KILLFRAME] ----------------------------------")
+                print(f"[VOLTCUT] ----------------------------------")
+                print(f"[VOLTCUT]   [OK] MONTAGE COMPLETE")
+                print(f"[VOLTCUT]   Clips      : {len(loaded)}")
+                print(f"[VOLTCUT]   Duration   : {final_video.duration:.1f}s")
+                print(f"[VOLTCUT]   Size       : {mb:.1f}MB")
+                print(f"[VOLTCUT]   Quality    : {cfg['bitrate']} {cfg['preset']}")
+                print(f"[VOLTCUT]   Beat sync  : TRUE — kills on beats")
+                print(f"[VOLTCUT]   Color grade: YES")
+                print(f"[VOLTCUT]   Music      : YES")
+                print(f"[VOLTCUT] ----------------------------------")
                 exported = True
                 break
         except Exception as e:
-            print(f"[KILLFRAME] Export failed ({cfg['preset']}): {e}")
+            print(f"[VOLTCUT] Export failed ({cfg['preset']}): {e}")
 
     for c in loaded:
         try: c.close()
         except: pass
 
     if not exported:
-        print("[KILLFRAME] [ERROR] All export attempts failed")
+        print("[VOLTCUT] [ERROR] All export attempts failed")

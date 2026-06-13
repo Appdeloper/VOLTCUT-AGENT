@@ -16,9 +16,9 @@ checks = {
     "dotenv": lambda: "installed" if __import__("dotenv") else "failed",
 }
 
-print("="*45)
-print("  KILLFRAME-AGENT Health Check")
-print("="*45)
+print("=" * 45)
+print("  ⚡ VOLTCUT-AGENT Health Check")
+print("=" * 45)
 all_ok = True
 for lib, check in checks.items():
     try:

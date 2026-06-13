@@ -1,5 +1,5 @@
 """
-KILLFRAME-AGENT Color Analyzer
+VOLTCUT-AGENT Color Analyzer
 Extracts exact color grading from reference video
 and applies it to output montage
 """
@@ -12,7 +12,7 @@ def extract_reference_lut(reference_video_path, sample_count=50):
     Extract color grading profile from reference video.
     Returns exact color transformation to apply.
     """
-    print("[KILLFRAME] Analyzing reference video color grade...")
+    print("[VOLTCUT] Analyzing reference video color grade...")
     cap = cv2.VideoCapture(reference_video_path)
     if not cap.isOpened():
         return get_default_grade()
@@ -112,13 +112,13 @@ def extract_reference_lut(reference_video_path, sample_count=50):
         "vignette_strength": 0.10,
     }
 
-    print(f"[KILLFRAME] Color grade extracted:")
-    print(f"[KILLFRAME]   Brightness  : {brightness_mult:.3f}x")
-    print(f"[KILLFRAME]   Contrast    : {contrast_mult:.3f}x")
-    print(f"[KILLFRAME]   Saturation  : {sat_mult:.3f}x")
-    print(f"[KILLFRAME]   Red channel : {red_ratio:.3f}x")
-    print(f"[KILLFRAME]   Green ch.   : {green_ratio:.3f}x")
-    print(f"[KILLFRAME]   Blue ch.    : {blue_ratio:.3f}x")
+    print(f"[VOLTCUT] Color grade extracted:")
+    print(f"[VOLTCUT]   Brightness  : {brightness_mult:.3f}x")
+    print(f"[VOLTCUT]   Contrast    : {contrast_mult:.3f}x")
+    print(f"[VOLTCUT]   Saturation  : {sat_mult:.3f}x")
+    print(f"[VOLTCUT]   Red channel : {red_ratio:.3f}x")
+    print(f"[VOLTCUT]   Green ch.   : {green_ratio:.3f}x")
+    print(f"[VOLTCUT]   Blue ch.    : {blue_ratio:.3f}x")
 
     return grade
 

@@ -1,4 +1,4 @@
-KILLFRAME-AGENT — Demo Guide
+VOLTCUT-AGENT — Demo Guide
 
 Run this demo to show the full pipeline in one go. Designed for judges and screen recording.
 

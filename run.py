@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KILLFRAME-AGENT — Interactive Mode
+VOLTCUT-AGENT — Interactive Mode
 Just run: python run.py
 """
 import os
@@ -16,10 +16,12 @@ def clear():
     os.system("cls" if os.name=="nt" else "clear")
 
 def banner():
-    print("="*55)
-    print("   🎮  KILLFRAME-AGENT — Autonomous Montage Editor")
-    print("   🏆  Microsoft Agents League Hackathon 2026")
-    print("="*55)
+    print("=" * 55)
+    print("  ⚡ VOLTCUT-AGENT")
+    print("  Autonomous Gaming Montage Editor")
+    print("  Any Game. Any Creator. Zero Editing.")
+    print("  Microsoft Agents League Hackathon 2026")
+    print("=" * 55)
     print()
 
 def ask_api_key():
@@ -157,20 +159,20 @@ def ask_output():
     print("─"*55)
     print("  STEP 5 — Output Filename")
     print("─"*55)
-    print("  Press ENTER for default: killframe_output.mp4")
+    print("  Press ENTER for default: voltcut_output.mp4")
     print()
-    name = input("  Output filename: ").strip()
-    if not name:
-        name = "killframe_output.mp4"
-    if not name.endswith(".mp4"):
-        name += ".mp4"
-    print(f"  [✅] Output: {name}")
-    return name
+    output = input("  Output name : ").strip()
+    if not output:
+        output = "voltcut_output.mp4"
+    if not output.endswith(".mp4"):
+        output += ".mp4"
+    print(f"  [✅] Output: {output}")
+    return output
 
 def confirm(youtube, footage, music, duration, output):
     print()
     print("="*55)
-    print("  KILLFRAME-AGENT — Ready To Edit")
+    print("  VOLTCUT-AGENT — Ready To Edit")
     print("="*55)
     print(f"  Reference  : {youtube[:50]}")
     print(f"  Footage    : {os.path.basename(footage)}")
@@ -195,7 +197,7 @@ def run_agent(youtube, footage, music, duration, output):
 
     print()
     print("="*55)
-    print("  🎬 KILLFRAME-AGENT PIPELINE STARTING...")
+    print("  🎬 VOLTCUT-AGENT PIPELINE STARTING...")
     print("="*55)
     print()
     cmd = [
@@ -260,9 +262,9 @@ def ask_learning_mode(youtube_url):
             # Call learn_from_youtube
             learn_from_youtube(reference_url=youtube_url, max_videos=100)
             print()
-            print("[KILLFRAME] Intelligence cached to style_intelligence.json")
-            print("[KILLFRAME] Next run will be instant — no relearning needed")
-            print("[KILLFRAME] To relearn: delete style_intelligence.json")
+            print("[VOLTCUT] Intelligence cached to style_intelligence.json")
+            print("[VOLTCUT] Next run will be instant — no relearning needed")
+            print("[VOLTCUT] To relearn: delete style_intelligence.json")
             break
         elif choice == 'S':
             print("  [✅] Skipping learning, using cached/default intelligence")

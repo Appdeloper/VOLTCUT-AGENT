@@ -30,10 +30,10 @@ class CustomProgressbar(tk.Canvas):
     def on_resize(self, event):
         self.draw()
 
-class KillframeUI:
+class VoltcutUI:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.title("🎮 KILLFRAME-AGENT — Autonomous Montage Editor")
+        self.root.title("🎮 VOLTCUT-AGENT — Autonomous Montage Editor")
         self.root.geometry("900x700")
         self.root.configure(bg='#0a0a0a')
         self.root.resizable(False, False)
@@ -314,7 +314,7 @@ class KillframeUI:
             pass
 
     def play_result(self):
-        output_file = "killframe_output.mp4"
+        output_file = "voltcut_output.mp4"
         if os.path.exists(output_file):
             try:
                 os.startfile(os.path.abspath(output_file))
@@ -356,7 +356,7 @@ class KillframeUI:
                     "--youtube", youtube_url,
                     "--footage", self.footage_path,
                     "--music", self.music_path,
-                    "--output", "killframe_output.mp4"
+                    "--output", "voltcut_output.mp4"
                 ]
                 
                 # Log command line
@@ -394,7 +394,7 @@ class KillframeUI:
                     self.root.after(0, lambda: self.lbl_gen_status.config(text="❌ Failed", fg='#ff4444'))
                     
             except Exception as e:
-                self.log_to_box(f"\n[KILLFRAME UI ERROR] {e}\n")
+                self.log_to_box(f"\n[VOLTCUT UI ERROR] {e}\n")
                 self.root.after(0, lambda: self.lbl_gen_status.config(text="❌ Error", fg='#ff4444'))
             finally:
                 self.root.after(0, lambda: self.btn_generate.config(state=tk.NORMAL))
@@ -405,5 +405,5 @@ class KillframeUI:
         self.root.mainloop()
 
 if __name__ == "__main__":
-    app = KillframeUI()
+    app = VoltcutUI()
     app.run()

@@ -85,6 +85,6 @@ if __name__ == "__main__":
             passed += 1
         else:
             print(f"  detail: {detail}")
-    print(f"KILLFRAME-AGENT: {passed}/{len(tests)} modules working")
+    print(f"VOLTCUT-AGENT: {passed}/{len(tests)} modules working")
     if passed != len(tests):
         raise SystemExit(1)

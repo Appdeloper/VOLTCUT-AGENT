@@ -4,7 +4,7 @@ def detect_beats(music_path):
     import os
 
     if not music_path or not os.path.exists(music_path):
-        print("[KILLFRAME] ⚠️ No music — using fallback beats")
+        print("[VOLTCUT] ⚠️ No music — using fallback beats")
         times = [i*2.5 for i in range(200)]
         return {
             "total_beats":len(times),"bpm":120.0,
@@ -14,10 +14,10 @@ def detect_beats(music_path):
         }
 
     try:
-        print(f"[KILLFRAME] Loading music: {os.path.basename(music_path)}")
+        print(f"[VOLTCUT] Loading music: {os.path.basename(music_path)}")
         y, sr = librosa.load(music_path, duration=600, mono=True)
         song_duration = len(y)/sr
-        print(f"[KILLFRAME] Music duration: {song_duration:.1f}s")
+        print(f"[VOLTCUT] Music duration: {song_duration:.1f}s")
 
         y_harmonic, y_percussive = librosa.effects.hpss(y)
         tempo, beat_frames = librosa.beat.beat_track(y=y_percussive, sr=sr, trim=False)
@@ -47,11 +47,11 @@ def detect_beats(music_path):
 
         avg_gap = float(np.mean(np.diff(beat_times))) if len(beat_times)>1 else 2.5
 
-        print(f"[KILLFRAME] BPM          : {tempo_val:.1f}")
-        print(f"[KILLFRAME] Total beats  : {len(beat_times)}")
-        print(f"[KILLFRAME] Bass drops   : {len(bass_times)}")
-        print(f"[KILLFRAME] Strong beats : {len(strong)}")
-        print(f"[KILLFRAME] Clip length  : {avg_gap:.3f}s")
+        print(f"[VOLTCUT] BPM          : {tempo_val:.1f}")
+        print(f"[VOLTCUT] Total beats  : {len(beat_times)}")
+        print(f"[VOLTCUT] Bass drops   : {len(bass_times)}")
+        print(f"[VOLTCUT] Strong beats : {len(strong)}")
+        print(f"[VOLTCUT] Clip length  : {avg_gap:.3f}s")
 
         return {
             "total_beats":len(beat_times),
@@ -64,7 +64,7 @@ def detect_beats(music_path):
             "song_duration":song_duration,
         }
     except Exception as e:
-        print(f"[KILLFRAME] Beat detection error: {e}")
+        print(f"[VOLTCUT] Beat detection error: {e}")
         times = [i*2.5 for i in range(200)]
         return {
             "total_beats":len(times),"bpm":120.0,

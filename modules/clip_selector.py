@@ -47,12 +47,12 @@ def select_clips(footage_folder, style_profile):
             break
 
     if not video_path:
-        print("[KILLFRAME] [ERROR] No footage found in folder")
+        print("[VOLTCUT] [ERROR] No footage found in folder")
         return []
 
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
-        print(f"[KILLFRAME] [ERROR] Cannot open: {video_path}")
+        print(f"[VOLTCUT] [ERROR] Cannot open: {video_path}")
         return []
 
     fps = cap.get(cv2.CAP_PROP_FPS) or 30
@@ -60,13 +60,13 @@ def select_clips(footage_folder, style_profile):
     duration = total_frames / fps
     duration_min = duration / 60
 
-    print(f"[KILLFRAME] ----------------------------------")
-    print(f"[KILLFRAME]   KILL SCANNER")
-    print(f"[KILLFRAME]   File     : {Path(video_path).name}")
-    print(f"[KILLFRAME]   Duration : {duration_min:.1f} minutes")
-    print(f"[KILLFRAME]   Frames   : {total_frames}")
-    print(f"[KILLFRAME]   FPS      : {fps:.0f}")
-    print(f"[KILLFRAME] ----------------------------------")
+    print(f"[VOLTCUT] ----------------------------------")
+    print(f"[VOLTCUT]   KILL SCANNER")
+    print(f"[VOLTCUT]   File     : {Path(video_path).name}")
+    print(f"[VOLTCUT]   Duration : {duration_min:.1f} minutes")
+    print(f"[VOLTCUT]   Frames   : {total_frames}")
+    print(f"[VOLTCUT]   FPS      : {fps:.0f}")
+    print(f"[VOLTCUT] ----------------------------------")
 
     # Adaptive frame skip based on duration
     if duration < 120:
@@ -82,7 +82,7 @@ def select_clips(footage_folder, style_profile):
     prev_gray = None
     last_progress = -1
 
-    print("[KILLFRAME] Scanning footage...")
+    print("[VOLTCUT] Scanning footage...")
 
     while True:
         ret, frame = cap.read()
@@ -99,7 +99,7 @@ def select_clips(footage_folder, style_profile):
         progress = int((frame_idx / max(total_frames,1)) * 100)
         if progress % 5 == 0 and progress != last_progress:
             kills_found = len([s for _,s in all_scores if s > 25])
-            print(f"[KILLFRAME] {progress:3d}% | {timestamp/60:.1f}min | Kills: {kills_found}")
+            print(f"[VOLTCUT] {progress:3d}% | {timestamp/60:.1f}min | Kills: {kills_found}")
             last_progress = progress
 
         # Skip first 15 seconds and non-gameplay
@@ -181,18 +181,18 @@ def select_clips(footage_folder, style_profile):
     cap.release()
 
     if not all_scores:
-        print("[KILLFRAME] [ERROR] No frames analyzed")
+        print("[VOLTCUT] [ERROR] No frames analyzed")
         return []
 
     scores_only = [s for _,s in all_scores]
-    print(f"\n[KILLFRAME] Scan complete: {len(all_scores)} frames")
-    print(f"[KILLFRAME] Score range: {min(scores_only):.1f} — {max(scores_only):.1f}")
+    print(f"\n[VOLTCUT] Scan complete: {len(all_scores)} frames")
+    print(f"[VOLTCUT] Score range: {min(scores_only):.1f} — {max(scores_only):.1f}")
 
     # Calculate clips needed based on output duration
     output_duration = int(style_profile.get("output_duration", 60))
     clip_len = float(style_profile.get("recommended_clip_length", 2.5))
     clips_needed = max(15, int(output_duration / clip_len))
-    print(f"[KILLFRAME] Need {clips_needed} clips for {output_duration}s output")
+    print(f"[VOLTCUT] Need {clips_needed} clips for {output_duration}s output")
 
     # Adaptive threshold — keep lowering until enough clips found
     percentile = 82
@@ -206,13 +206,13 @@ def select_clips(footage_folder, style_profile):
                 merged.append([ts, sc])
             elif sc > merged[-1][1]:
                 merged[-1] = [ts, sc]
-        print(f"[KILLFRAME] Threshold {threshold:.1f} (p{percentile}) -> {len(merged)} kills")
+        print(f"[VOLTCUT] Threshold {threshold:.1f} (p{percentile}) -> {len(merged)} kills")
         if len(merged) >= clips_needed:
             break
         percentile -= 8
 
     if not merged:
-        print("[KILLFRAME] Using evenly spaced segments as fallback")
+        print("[VOLTCUT] Using evenly spaced segments as fallback")
         merged = [(i*(duration/20), 1.0) for i in range(1, 21) if i*(duration/20) < duration]
 
     # Sort by score — best kills first
@@ -220,7 +220,7 @@ def select_clips(footage_folder, style_profile):
     selected = merged[:clips_needed]
     selected_times = sorted([t for t,_ in selected])
 
-    print(f"[KILLFRAME] Selected {len(selected_times)} kill moments")
+    print(f"[VOLTCUT] Selected {len(selected_times)} kill moments")
 
     # Extract clips
     os.makedirs("temp/kills", exist_ok=True)
@@ -228,7 +228,7 @@ def select_clips(footage_folder, style_profile):
         old.unlink()
 
     output_clips = []
-    print(f"[KILLFRAME] Extracting {len(selected_times)} clips...")
+    print(f"[VOLTCUT] Extracting {len(selected_times)} clips...")
 
     for i, ts in enumerate(selected_times):
         kill_offset = 1.0
@@ -255,21 +255,21 @@ def select_clips(footage_folder, style_profile):
                         "timestamp": ts,
                         "score": next((s for t,s in selected if abs(t-ts)<0.5), 0)
                     })
-                    print(f"[KILLFRAME] [OK] Kill {i+1:03d}/{len(selected_times)} | {ts:.1f}s")
+                    print(f"[VOLTCUT] [OK] Kill {i+1:03d}/{len(selected_times)} | {ts:.1f}s")
                     success = True
                     break
         if not success:
-            print(f"[KILLFRAME] [ERROR] Failed: {ts:.1f}s")
+            print(f"[VOLTCUT] [ERROR] Failed: {ts:.1f}s")
 
     if output_clips:
         try:
             from modules.validator import validate_clips
             output_clips = validate_clips(output_clips)
         except Exception as e:
-            print(f"[KILLFRAME] Clip validation warning: {e}")
+            print(f"[VOLTCUT] Clip validation warning: {e}")
 
-    print(f"[KILLFRAME] ----------------------------------")
-    print(f"[KILLFRAME]   Kills detected  : {len(merged)}")
-    print(f"[KILLFRAME]   Clips extracted : {len(output_clips)}")
-    print(f"[KILLFRAME] ----------------------------------")
+    print(f"[VOLTCUT] ----------------------------------")
+    print(f"[VOLTCUT]   Kills detected  : {len(merged)}")
+    print(f"[VOLTCUT]   Clips extracted : {len(output_clips)}")
+    print(f"[VOLTCUT] ----------------------------------")
     return output_clips

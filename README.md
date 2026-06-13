@@ -1,146 +1,244 @@
-# 🎮 KILLFRAME-AGENT
+# ⚡ VOLTCUT-AGENT
 
-> **An autonomous AI gaming montage editor built for the Microsoft Agents League Hackathon that watches, learns, and edits like a professional content creator — 100% Free, Offline-Ready, and API Key Optional.**
+> **VOLTCUT-AGENT is an autonomous AI agent that strikes like lightning — analyzing any gaming creator's YouTube style and instantly producing electric beat-synced kill montages from raw gameplay footage. Any game. Any creator. Zero editing.**
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=for-the-badge&logo=python)
 ![GitHub Copilot](https://img.shields.io/badge/Built%20With-GitHub%20Copilot-black?style=for-the-badge&logo=github)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Hackathon](https://img.shields.io/badge/Microsoft-Agents%20League%202026-orange?style=for-the-badge&logo=microsoft)
+![Games](https://img.shields.io/badge/Games-Any%20Game-red?style=for-the-badge)
 
 ---
 
-## 🚀 Hackathon Quick Start (Zero-Setup Mode)
-**KILLFRAME-AGENT runs completely for FREE. API keys are 100% optional!**
-* **No API Key Required**: The agent runs out-of-the-box using the pre-cached style database (`style_intelligence.json`) or falls back to a built-in Free Fire style profile.
-* **No Complex Setup**: Pre-configured with dynamic dependency validation and self-healing.
+## ⚡ What Is VOLTCUT-AGENT?
 
-### ⚡ 3-Step Execution:
-1. **Prerequisites**: Ensure Python 3.10+ and `ffmpeg` (added to your system PATH) are installed.
-2. **Install**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Launch the Wizard**:
-   ```bash
-   python run.py
-   ```
-   * *Step 1*: Press **ENTER** to run in Free Mode (no API key needed).
-   * *Step 2*: Press **ENTER** to use the default pro reference video style.
-   * *Step 3*: Choose **S** to skip learning and use cached intelligence.
-   * *Step 4*: Provide raw gameplay MP4 path (e.g. `test_footage/2026-06-12 00-48-09.mp4`).
-   * *Step 5*: Choose option **1** to auto-extract the music track from the reference.
-   * *Step 6*: Choose output duration (e.g. 1 minute or standard montage).
-   * *Step 7*: Press **ENTER** to generate. The agent will output `killframe_output.mp4`!
+VOLTCUT-AGENT is an **autonomous AI agent** that watches any gaming YouTube creator, learns their exact editing style, and automatically produces a professional beat-synced montage from your raw gameplay footage — with zero manual editing required.
+
+Point it at any YouTube channel. Give it your gameplay and a track. It strikes like lightning and delivers a professional montage.
+
+**Works with ANY game:**
+- 🎮 Free Fire
+- 🎮 BGMI / PUBG Mobile
+- 🎮 Valorant
+- 🎮 COD Mobile
+- 🎮 Fortnite
+- 🎮 Apex Legends
+- 🎮 Any FPS / Battle Royale
 
 ---
 
-## 🔥 What is KILLFRAME-AGENT?
+## 🤖 How The Agent Works
+📺 INPUT: YouTube Channel URL + Raw Footage + Music
 
-KILLFRAME-AGENT is an autonomous, end-to-end agentic editing pipeline tailored for gaming creators. Mobile games like **Free Fire** have massive player bases across emerging markets (India, Brazil, Southeast Asia) where creators lack access to high-end editing software or expensive AI API credits. 
+│
 
-KILLFRAME-AGENT solves this by providing a professional-grade editor that runs entirely on local consumer hardware. It ingests raw gameplay, extracts peak action highlight clips, aligns them to background beats with microsecond precision, grades the colors to make them pop, and exports a ready-to-share montage video.
+▼
+
+⚡ STEP 1 — STYLE ANALYZER
+
+Agent downloads reference video
+
+AI analyzes editing style, pacing, color grade
+
+Output: style_profile.json
+
+│
+
+▼
+
+🎵 STEP 2 — BEAT DETECTOR
+
+Detects every beat drop and bass drop
+
+Snaps to exact 30fps video frames
+
+Output: beat_timeline.json
+
+│
+
+▼
+
+💀 STEP 3 — KILL DETECTOR
+
+Scans footage using 7-signal computer vision
+
+Finds every kill moment automatically
+
+Output: kill_clips/
+
+│
+
+▼
+
+🎬 STEP 4 — VIDEO EDITOR
+
+Syncs kills EXACTLY on beat drops
+
+Applies color grading from reference
+
+Adds music, flash transitions, zoom pulses
+
+Output: voltcut_output.mp4
+
+│
+
+▼
+
+🏆 OUTPUT: Professional Beat-Synced Montage
 
 ---
 
-## 🧠 Complete Agentic Architecture
+## 🎯 The Problem
 
-The agent performs work through a multi-stage execution pipeline, coordinating specialized modules:
+Gaming content creators spend **3-4 hours** manually editing every montage:
+- ❌ Finding kill moments by hand
+- ❌ Manually syncing cuts to beats
+- ❌ Color grading every clip
+- ❌ Adding transitions one by one
+- ❌ Expensive software required
 
-```mermaid
-graph TD
-    A[Raw Video + Music Input] --> B[Validator Module]
-    B --> C[Style Analyzer]
-    C -->|Use Cache/Defaults| D[Gameplay Highlight Scanner]
-    C -->|Optional LLM Call| D
-    D -->|7-Signal CV Scanner| E[Percussive Beat Detector]
-    E -->|Librosa HPSS beat-tracking| F[Video Editor Assembly]
-    F -->|True Beat-Kill Sync + Color Grading| G[Final Montage Export]
-    G --> B
+**3 billion+ gamers worldwide. Millions of creators. Zero AI tools built for them.**
+
+**VOLTCUT-AGENT solves this — for free.**
+
+---
+
+## ✅ The Solution
+You        : paste YouTube URL + footage + music
+
+VOLTCUT    : does everything else automatically
+
+Result     : professional montage in minutes
+
+Cost       : completely free
+
+---
+
+## 🛠️ Tech Stack
+
+| Tool | Purpose |
+|---|---|
+| **GitHub Copilot** | AI-assisted development |
+| **Python 3.10+** | Core agent language |
+| **yt-dlp** | YouTube style analysis |
+| **librosa + scipy** | Beat and bass drop detection |
+| **OpenCV** | 7-signal kill detection |
+| **MoviePy** | Professional video editing |
+| **FFmpeg** | Video processing |
+| **Gemini/Groq API** | Optional AI style analysis |
+
+---
+
+## 🚀 Getting Started
+
+### Install
+```bash
+git clone https://github.com/Appdeloper/VOLTCUT-AGENT.git
+cd VOLTCUT-AGENT
+pip install -r requirements.txt
 ```
 
-### 1. 🛡️ Pipeline Sanitization (`modules/validator.py`)
-To prevent crashes during long render jobs, a self-healing validator runs checks before, during, and after execution:
-* Assures input gameplay file exists, has valid codecs, and is readable.
-* Checks audio duration and handles alignment issues.
-* Automatically repairs folders and resolves file locking issues during MoviePy processing.
-
-### 2. 📺 Creators Learning Engine (`modules/youtube_learner.py` & `style_analyzer.py`)
-* **Dual Execution Modes**:
-  * **Free Mode (Default)**: Uses pre-trained creator intelligence cached in `style_intelligence.json` or falls back to a custom Free Fire profile.
-  * **AI-Enhanced Mode**: Reads keys from `.env` to query LLMs (Gemini, Groq, OpenAI, Anthropic) to extract pacing and vibe dynamics from any reference video.
-* **Smart Downloader**: Automatically downloads reference videos using `yt-dlp` for local color histogram and pacing analysis.
-
-### 3. 🔍 7-Signal Highlight Selector (`modules/clip_selector.py`)
-Scans raw gameplay using advanced computer vision to find highlights. It calculates a frame action score based on:
-1. **Kill Feed Detection**: Red pixel density in the kill notification zone.
-2. **Screen Flash**: Sharp brightness changes marking muzzle flash.
-3. **Motion Flow**: Frame difference average representing movement activity.
-4. **Resized Optical Flow**: Farneback dense optical flow calculated on resized `480x270` frames for a 15x scanning speed improvement.
-5. **Gun Recoil**: Directional shifts in the weapon viewport zone.
-6. **Contour Density**: Edge count distribution changes.
-7. **Hit Markers**: Center-screen impact indicators.
-* *Smart Cooldown*: Merges consecutive events and avoids redundant clips.
-
-### 4. 🎵 Percussive Beat Sync (`modules/beat_detector.py`)
-* **Rhythmic Separation**: Uses Harmonic-Percussive Source Separation (HPSS) to extract rhythm transients from melody.
-* **Beat Mapping**: Tracks tempo (BPM) and onset envelopes to map beat drops.
-* **Bass Drops**: Automatically tracks bass drop energy to highlight premium kills.
-
-### 5. 🎬 True Beat-Kill Editor (`modules/video_editor.py`)
-* **Exact Synchronization**: Trims and offsets footage so the actual kill frame aligns **perfectly on the beat drop** (positioning the kill at exactly `0.3s` from start of the clip).
-* **Cinematic Color Grading**: Boosts contrast (`1.25`) and saturation (`1.35`) and lifts reds and greens to give that vibrant gaming montage aesthetic.
-* **Transitions**: Inserts white flash transitions synced with beat events.
-* **Automatic Scaling**: Loops and pads clips to dynamically match the target output duration (up to 8 minutes).
-
----
-
-## 🛠 Tech Stack
-
-| Component | Technology | Rationale |
-|---|---|---|
-| **Core** | Python 3.10+ | Robust agent runtime & package eco-system. |
-| **Vision** | OpenCV (cv2) | Frame-by-frame highlight scanning and recoil tracking. |
-| **DSP** | Librosa & SciPy | Audio separation, BPM mapping, and beat envelope analysis. |
-| **Rendering** | MoviePy & FFmpeg | Audio/video mixing, transitions, and high-quality CRF 17 exports. |
-| **Orchestration** | Multi-LLM | Optional AI style analysis using Gemini, Claude, GPT, or Llama. |
-
----
-
-## 📁 Repository Structure
-
+### Run
+```bash
+python run.py
 ```
-KILLFRAME-AGENT/
-│
-├── agent.py                 # Primary pipeline coordinator (runs step-by-step)
-├── run.py                   # Step-by-step wizard UI (Console/Terminal)
-├── check.py                 # Health and dependency check tool
-├── requirements.txt         # Package dependencies
-├── style_intelligence.json  # Pre-compiled style data (enables Free Mode)
-│
+
+That's it. Follow the prompts:
+```
+⚡ VOLTCUT-AGENT
+
+  API Key     : (optional — runs free without it)
+  YouTube URL : paste any gaming creator URL
+  Footage     : drag and drop your gameplay file
+  Music       : drag and drop your music file
+  Duration    : choose 30s / 1min / 3min / 5min / 8min
+  Output name : your filename
+
+  Press ENTER → montage generated automatically
+```
+
+### 💀 Kill Detection — 7 Signal System
+VOLTCUT uses 7 simultaneous signals to find kills:
+- **Kill Feed**: Red pixels in top-right corner
+- **Screen Flash**: White brightness spike
+- **Optical Flow**: Rapid camera movement
+- **Motion Score**: Frame difference intensity
+- **Gun Recoil**: Bottom center movement
+- **Enemy Contours**: Large moving objects
+- **Hit Effects**: Red center screen flash
+
+Auto-adaptive threshold — learns from YOUR footage automatically.
+
+### 🎵 Beat Sync System
+- **Bass Drops**: 1st — highest kills (Longer flash + stronger zoom)
+- **Strong Beats**: 2nd — good kills (Normal flash + zoom)
+- **Regular Beats**: 3rd — fill clips (Short flash)
+
+Every kill lands exactly on a beat. Not approximately — exactly.
+
+### 🎨 Color Grading
+VOLTCUT automatically clones the color grade from your reference video:
+- Extracts brightness, contrast, saturation values
+- Matches red/green/blue channel ratios
+- Applies shadow lift and highlight protection
+- Adds subtle vignette
+
+Your output looks like the creator you referenced.
+
+### 📁 Project Structure
+```
+VOLTCUT-AGENT/
+├── agent.py                    # Master pipeline
+├── run.py                      # Interactive launcher
+├── demo.py                     # Demo mode
+├── check.py                    # Health check
+├── requirements.txt
+├── .env.example
 └── modules/
-    ├── validator.py         # Full pipeline validation and self-healing
-    ├── style_analyzer.py    # Fallback/cache styles and optional LLM analysis
-    ├── clip_selector.py     # 7-signal action highlight extractor
-    ├── beat_detector.py     # Librosa percussive beat tracking
-    ├── video_editor.py      # Assembly, true sync, and Hollywood grading
-    ├── song_extractor.py    # Extracts and downloads song from reference
-    ├── color_analyzer.py    # Ref video color palette extraction
-    └── key_manager.py       # Local API credential manager
+    ├── style_analyzer.py       # YouTube style AI
+    ├── beat_detector.py        # Music beat analysis
+    ├── clip_selector.py        # Kill detection
+    ├── video_editor.py         # Montage editor
+    ├── color_analyzer.py       # Color grading
+    ├── song_extractor.py       # Auto song finder
+    ├── youtube_learner.py      # 100 video learning
+    ├── key_manager.py          # API security
+    └── validator.py            # Pipeline validator
 ```
 
----
+### 🔐 Security
+- API key entered via hidden prompt (like password)
+- Stored only in local `.env` file
+- Never pushed to GitHub
+- API key completely optional — runs free without it
 
-## 🛡️ Console Compatibility & Robust Logging
-Designed to run on all platforms, including Windows consoles set to regional page codes like CP1252. The logs are stripped of emojis and special characters, using standardized `[OK]`, `[FAIL]`, and `[INFO]` ASCII tags to prevent console encoding crashes.
+### 🔮 Future Vision
+- Web UI for non-technical creators
+- Direct upload to YouTube and Instagram
+- Real-time kill detection during live gameplay
+- Style presets from top 100 gaming creators
+- Support for console gameplay footage
+- Mobile app version
 
----
+### 🏆 Built For
+Microsoft Agents League Hackathon 2026
 
-## 🏆 Hackathon Details
-* **Hackathon**: Microsoft Agents League Hackathon 2026
-* **Track**: Creative Apps
-* **Development Tool**: GitHub Copilot
+Track: Creative Apps
 
----
+Tool: GitHub Copilot
 
-## 📄 License
-This project is licensed under the MIT License — free to use, edit, and distribute.
+VOLTCUT-AGENT demonstrates true agentic AI — four autonomous steps that take a creative brief and produce a finished professional output with zero human intervention.
+
+### 📊 Market Size
+- 3 billion+ active gamers worldwide
+- 50 million+ gaming content creators
+- $250 billion gaming industry
+- Zero dedicated AI montage editors exist
+
+VOLTCUT-AGENT is first to market.
+
+### 👤 Author
+Built with ⚡ by Appdeloper for Microsoft Agents League Hackathon 2026.
+
+### 📄 License
+MIT License — free to use, modify, and distribute.

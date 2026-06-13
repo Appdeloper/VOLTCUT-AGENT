@@ -1,5 +1,5 @@
 """
-KILLFRAME-AGENT YouTube Learning Engine
+VOLTCUT-AGENT YouTube Learning Engine
 Analyzes 100 Free Fire montage videos and builds
 a master style intelligence database
 """
@@ -117,15 +117,15 @@ def learn_from_youtube(reference_url=None, max_videos=100):
             with open(CACHE_FILE) as f:
                 cache = json.load(f)
             if cache.get("video_count", 0) >= 10:
-                print(f"[KILLFRAME] Loaded cached intelligence from {cache['video_count']} videos")
+                print(f"[VOLTCUT] Loaded cached intelligence from {cache['video_count']} videos")
                 return cache["master_style"]
         except Exception:
             pass
 
-    print("[KILLFRAME] ══════════════════════════════════════")
-    print("[KILLFRAME]   KILLFRAME AI LEARNING ENGINE")
-    print("[KILLFRAME]   Analyzing Free Fire montage videos...")
-    print("[KILLFRAME] ══════════════════════════════════════")
+    print("[VOLTCUT] ══════════════════════════════════════")
+    print("[VOLTCUT]   VOLTCUT AI LEARNING ENGINE")
+    print("[VOLTCUT]   Analyzing Free Fire montage videos...")
+    print("[VOLTCUT] ══════════════════════════════════════")
 
     os.makedirs("learning_cache", exist_ok=True)
     all_metrics = []
@@ -163,7 +163,7 @@ def learn_from_youtube(reference_url=None, max_videos=100):
         if video_count >= max_videos:
             break
 
-        print(f"[KILLFRAME] Searching: {query[:60]}...")
+        print(f"[VOLTCUT] Searching: {query[:60]}...")
 
         try:
             import yt_dlp
@@ -180,7 +180,7 @@ def learn_from_youtube(reference_url=None, max_videos=100):
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([query])
         except Exception as e:
-            print(f"[KILLFRAME] Download issue: {e}")
+            print(f"[VOLTCUT] Download issue: {e}")
             continue
 
         # Analyze downloaded videos
@@ -188,28 +188,28 @@ def learn_from_youtube(reference_url=None, max_videos=100):
             if video_count >= max_videos:
                 break
             try:
-                print(f"[KILLFRAME] Analyzing video {video_count+1}/{max_videos}: {f.name[:30]}...")
+                print(f"[VOLTCUT] Analyzing video {video_count+1}/{max_videos}: {f.name[:30]}...")
                 metrics = analyze_single_video(str(f))
                 if metrics and metrics["cuts_per_minute"] > 0:
                     all_metrics.append(metrics)
                     video_count += 1
-                    print(f"[KILLFRAME] ✅ Learned: {metrics['cuts_per_minute']:.1f} cuts/min | {metrics['avg_clip_length']:.1f}s clips | brightness {metrics['avg_brightness']:.0f}")
+                    print(f"[VOLTCUT] ✅ Learned: {metrics['cuts_per_minute']:.1f} cuts/min | {metrics['avg_clip_length']:.1f}s clips | brightness {metrics['avg_brightness']:.0f}")
                 # Delete to save space
                 f.unlink()
             except Exception as e:
-                print(f"[KILLFRAME] Skip: {e}")
+                print(f"[VOLTCUT] Skip: {e}")
                 continue
 
         time.sleep(1)
 
     if not all_metrics:
-        print("[KILLFRAME] Using built-in default intelligence")
+        print("[VOLTCUT] Using built-in default intelligence")
         return get_default_intelligence()
 
     # Build master style from all analyzed videos
-    print(f"\n[KILLFRAME] ══════════════════════════════════════")
-    print(f"[KILLFRAME] LEARNING COMPLETE — {video_count} videos analyzed")
-    print(f"[KILLFRAME] Building master style intelligence...")
+    print(f"\n[VOLTCUT] ══════════════════════════════════════")
+    print(f"[VOLTCUT] LEARNING COMPLETE — {video_count} videos analyzed")
+    print(f"[VOLTCUT] Building master style intelligence...")
 
     master = build_master_style(all_metrics)
 
@@ -278,17 +278,17 @@ def build_master_style(all_metrics):
     }
 
 def print_intelligence_report(master, count):
-    print(f"[KILLFRAME] ══════════════════════════════════════")
-    print(f"[KILLFRAME]   AI LEARNING REPORT")
-    print(f"[KILLFRAME] ══════════════════════════════════════")
-    print(f"[KILLFRAME]   Videos analyzed    : {count}")
-    print(f"[KILLFRAME]   Optimal cuts/min   : {master['cuts_per_minute']:.1f}")
-    print(f"[KILLFRAME]   Optimal clip length: {master['avg_clip_length']:.2f}s")
-    print(f"[KILLFRAME]   Color grade        : {master['color_grade']}")
-    print(f"[KILLFRAME]   Pacing style       : {master['pacing']}")
-    print(f"[KILLFRAME]   Uses flash cuts    : {master['uses_flash']}")
-    print(f"[KILLFRAME]   Brightness level   : {master['brightness_level']:.0f}")
-    print(f"[KILLFRAME] ══════════════════════════════════════")
+    print(f"[VOLTCUT] ══════════════════════════════════════")
+    print(f"[VOLTCUT]   AI LEARNING REPORT")
+    print(f"[VOLTCUT] ══════════════════════════════════════")
+    print(f"[VOLTCUT]   Videos analyzed    : {count}")
+    print(f"[VOLTCUT]   Optimal cuts/min   : {master['cuts_per_minute']:.1f}")
+    print(f"[VOLTCUT]   Optimal clip length: {master['avg_clip_length']:.2f}s")
+    print(f"[VOLTCUT]   Color grade        : {master['color_grade']}")
+    print(f"[VOLTCUT]   Pacing style       : {master['pacing']}")
+    print(f"[VOLTCUT]   Uses flash cuts    : {master['uses_flash']}")
+    print(f"[VOLTCUT]   Brightness level   : {master['brightness_level']:.0f}")
+    print(f"[VOLTCUT] ══════════════════════════════════════")
 
 def get_default_intelligence():
     return {
@@ -313,4 +313,4 @@ def get_default_intelligence():
 def clear_cache():
     if os.path.exists(CACHE_FILE):
         os.remove(CACHE_FILE)
-        print("[KILLFRAME] Learning cache cleared — will relearn on next run")
+        print("[VOLTCUT] Learning cache cleared — will relearn on next run")
