@@ -10,6 +10,7 @@ Microsoft Agents League Hackathon 2026
 import subprocess
 import sys
 import os
+os.environ["IMAGEIO_FFMPEG_EXE"] = "ffmpeg"
 import argparse
 import time
 from dotenv import load_dotenv
