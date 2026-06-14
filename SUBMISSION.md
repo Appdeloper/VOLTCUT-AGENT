@@ -14,9 +14,13 @@ style and auto-produces beat-synced kill montages. Any game.
 Any creator. Zero editing. Completely free.
 
 ## How It Is Agentic
-Four autonomous reasoning steps — analyze, detect, select, edit —
-chained into one pipeline. Zero human input between steps.
-The agent makes all decisions independently.
+
+VOLTCUT-AGENT runs four autonomous agents in sequence — Style Analysis,
+Beat Synchronization, Kill-Detection Vision, and Compositor — each
+making independent decisions (style profiling, adaptive beat mapping,
+adaptive kill-threshold detection, beat-synced rendering) without any
+human input between steps. One command triggers the full autonomous
+pipeline end to end.
 
 ## Tech Stack
 Python, GitHub Copilot, yt-dlp, librosa, OpenCV, MoviePy,
