@@ -245,7 +245,8 @@ def select_clips(footage_folder, style_profile):
 
         success = False
         cmds = [
-            f'ffmpeg -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c:v libx264 -preset veryfast -threads 2 -b:v 6000k -c:a aac "{out}" -y -loglevel quiet',
+            f'ffmpeg -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c:v h264_amf -b:v 6000k -c:a aac "{out}" -y -loglevel quiet',
+            f'ffmpeg -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c copy "{out}" -y -loglevel quiet',
         ]
         for cmd in cmds:
             result = os.system(cmd)

@@ -223,20 +223,17 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
         except Exception as e:
             print(f"[VOLTCUT] Music error: {e}")
 
-    # Export — quality fallbacks using CPU-friendly encoding settings
+    # Export — quality fallbacks using AMD GPU AMF encoding settings
     export_configs = [
-        {"codec":"libx264","audio_codec":"aac","bitrate":"6000k","fps":30,
-         "threads":2,"preset":"veryfast","logger":None},
-        {"codec":"libx264","audio_codec":"aac","bitrate":"4000k","fps":30,
-         "threads":2,"preset":"ultrafast","logger":None},
-        {"codec":"libx264","audio_codec":"aac","bitrate":"2500k","fps":24,
-         "threads":1,"preset":"ultrafast","logger":None},
+        {"codec":"h264_amf","audio_codec":"aac","bitrate":"6000k","fps":30,"logger":None},
+        {"codec":"h264_amf","audio_codec":"aac","bitrate":"4000k","fps":30,"logger":None},
+        {"codec":"h264_mf","audio_codec":"aac","bitrate":"3000k","fps":24,"logger":None},
     ]
 
     exported = False
     for cfg in export_configs:
         try:
-            print(f"[VOLTCUT] Exporting: {cfg['preset']} | {cfg['bitrate']}")
+            print(f"[VOLTCUT] Exporting: {cfg.get('preset', 'hardware')} | {cfg['bitrate']}")
             final_video.write_videofile(output_path, **cfg)
             if os.path.exists(output_path) and os.path.getsize(output_path)>100000:
                 mb = os.path.getsize(output_path)/(1024*1024)
@@ -245,7 +242,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
                 print(f"[VOLTCUT]   Clips      : {len(loaded)}")
                 print(f"[VOLTCUT]   Duration   : {final_video.duration:.1f}s")
                 print(f"[VOLTCUT]   Size       : {mb:.1f}MB")
-                print(f"[VOLTCUT]   Quality    : {cfg['bitrate']} {cfg['preset']}")
+                print(f"[VOLTCUT]   Quality    : {cfg['bitrate']} {cfg.get('preset', 'hardware')}")
                 print(f"[VOLTCUT]   Beat sync  : TRUE — kills on beats")
                 print(f"[VOLTCUT]   Color grade: YES")
                 print(f"[VOLTCUT]   Music      : YES")
@@ -253,7 +250,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
                 exported = True
                 break
         except Exception as e:
-            print(f"[VOLTCUT] Export failed ({cfg['preset']}): {e}")
+            print(f"[VOLTCUT] Export failed ({cfg.get('preset', 'hardware')}): {e}")
             # If 1080p too heavy, try 720p fallback
             if final_video.size == (1920,1080):
                 try:
@@ -267,7 +264,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
                         print(f"[VOLTCUT]   Clips      : {len(loaded)}")
                         print(f"[VOLTCUT]   Duration   : {final_video_720.duration:.1f}s")
                         print(f"[VOLTCUT]   Size       : {mb:.1f}MB")
-                        print(f"[VOLTCUT]   Quality    : {cfg['bitrate']} {cfg['preset']}")
+                        print(f"[VOLTCUT]   Quality    : {cfg['bitrate']} {cfg.get('preset', 'hardware')}")
                         print(f"[VOLTCUT]   Beat sync  : TRUE — kills on beats")
                         print(f"[VOLTCUT]   Color grade: YES")
                         print(f"[VOLTCUT]   Music      : YES")
