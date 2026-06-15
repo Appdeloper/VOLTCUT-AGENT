@@ -78,6 +78,8 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
     except:
         grade = None
 
+    vignette_cache = {}
+
     def safe_grade(frame):
         try:
             if grade is None:
@@ -96,11 +98,16 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
             # Shadow lift
             lift = float(grade.get("shadow_lift",8.0))
             f = np.clip(f + lift*(1-f/255), 0, 255)
-            # Subtle vignette
+            # Subtle vignette (optimized & cached)
             h, w = f.shape[:2]
-            Y, X = np.ogrid[:h, :w]
-            v = 1 - 0.10*(((X-w/2)**2+(Y-h/2)**2)/((w/2)**2+(h/2)**2))
-            f = f * np.clip(v,0.90,1.0)[:,:,np.newaxis]
+            cache_key = (h, w)
+            if cache_key not in vignette_cache:
+                Y, X = np.ogrid[:h, :w]
+                X_f = X.astype(np.float32)
+                Y_f = Y.astype(np.float32)
+                v = 1.0 - 0.10*(((X_f-w/2.0)**2+(Y_f-h/2.0)**2)/((w/2.0)**2+(h/2.0)**2))
+                vignette_cache[cache_key] = np.clip(v,0.90,1.0)[:,:,np.newaxis].astype(np.float32)
+            f = f * vignette_cache[cache_key]
             result = np.clip(f,0,255).astype(np.uint8)
             return result if result.mean() > 10 else frame
         except:
