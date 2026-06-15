@@ -140,8 +140,11 @@ def select_clips(footage_folder, style_profile):
         # SIGNAL 4: Optical flow
         if prev_gray is not None:
             try:
+                # Downsample to 480x270 to speed up optical flow by ~16x on CPU
+                prev_gray_small = cv2.resize(prev_gray, (480, 270))
+                gray_small = cv2.resize(gray, (480, 270))
                 flow = cv2.calcOpticalFlowFarneback(
-                    prev_gray, gray, None, 0.5, 3, 15, 3, 5, 1.2, 0
+                    prev_gray_small, gray_small, None, 0.5, 3, 15, 3, 5, 1.2, 0
                 )
                 score += np.sqrt(flow[...,0]**2+flow[...,1]**2).mean() * 3.5
             except:
@@ -222,9 +225,13 @@ def select_clips(footage_folder, style_profile):
 
     print(f"[VOLTCUT] Selected {len(selected_times)} kill moments")
 
+    output_name = style_profile.get("output_path", "voltcut_output.mp4")
+    safe_name = "".join([c if c.isalnum() else "_" for c in Path(output_name).stem])
+    temp_dir = f"temp/kills_{safe_name}"
+
     # Extract clips
-    os.makedirs("temp/kills", exist_ok=True)
-    for old in Path("temp/kills").glob("*.mp4"):
+    os.makedirs(temp_dir, exist_ok=True)
+    for old in Path(temp_dir).glob("*.mp4"):
         old.unlink()
 
     output_clips = []
@@ -234,13 +241,11 @@ def select_clips(footage_folder, style_profile):
         kill_offset = 1.0
         clip_start = max(0.0, ts - kill_offset)
         clip_duration = kill_offset + 2.5
-        out = f"temp/kills/kill_{i:03d}.mp4"
+        out = f"{temp_dir}/kill_{i:03d}.mp4"
 
         success = False
         cmds = [
-            f'ffmpeg -hwaccel cuda -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c:v h264_nvenc -b:v 8000k -c:a aac "{out}" -y -loglevel quiet',
-            f'ffmpeg -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c:v libx264 -preset ultrafast -b:v 6000k -c:a aac "{out}" -y -loglevel quiet',
-            f'ffmpeg -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c copy "{out}" -y -loglevel quiet',
+            f'ffmpeg -ss {clip_start:.3f} -i "{video_path}" -t {clip_duration:.3f} -c:v libx264 -preset veryfast -threads 2 -b:v 6000k -c:a aac "{out}" -y -loglevel quiet',
         ]
         for cmd in cmds:
             result = os.system(cmd)

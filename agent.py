@@ -124,6 +124,7 @@ def main():
             print("\n[VOLTCUT] Step 1/4 — Analyzing style...")
             style = analyze_style(args.youtube)
             style["output_duration"] = args.duration
+            style["output_path"] = args.output
             print(f"[VOLTCUT] Style done ({time.time()-t1:.1f}s)")
 
             music = args.music

@@ -121,7 +121,7 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
         original_clip_data = list(clip_data)
         while len(clip_data) < clips_needed_to_fill:
             clip_data.extend(original_clip_data)
-        clip_data = clip_data[:clips_needed_to_fill]
+    clip_data = clip_data[:clips_needed_to_fill]
 
     for i, data in enumerate(clip_data):
         path = data.get("path","")
@@ -131,7 +131,17 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
             if not os.path.exists(path):
                 print(f"[VOLTCUT] [ERROR] Missing: {path}")
                 continue
-            clip = VideoFileClip(path)
+
+            import time
+            clip = None
+            for attempt in range(6):
+                try:
+                    clip = VideoFileClip(path)
+                    break
+                except Exception as e_lock:
+                    if attempt == 5:
+                        raise e_lock
+                    time.sleep(0.2)
             if clip.duration < 0.3:
                 clip.close()
                 continue
@@ -213,18 +223,18 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
         except Exception as e:
             print(f"[VOLTCUT] Music error: {e}")
 
-    # Export — 3 quality fallbacks
-    configs = [
-        {"codec":"libx264","audio_codec":"aac","bitrate":"10000k","fps":30,
-         "threads":4,"preset":"slow","ffmpeg_params":["-crf","17","-movflags","+faststart"],"logger":None},
-        {"codec":"libx264","audio_codec":"aac","bitrate":"8000k","fps":30,
-         "threads":4,"preset":"fast","logger":None},
-        {"codec":"libx264","audio_codec":"aac","bitrate":"5000k","fps":30,
+    # Export — quality fallbacks using CPU-friendly encoding settings
+    export_configs = [
+        {"codec":"libx264","audio_codec":"aac","bitrate":"6000k","fps":30,
+         "threads":2,"preset":"veryfast","logger":None},
+        {"codec":"libx264","audio_codec":"aac","bitrate":"4000k","fps":30,
          "threads":2,"preset":"ultrafast","logger":None},
+        {"codec":"libx264","audio_codec":"aac","bitrate":"2500k","fps":24,
+         "threads":1,"preset":"ultrafast","logger":None},
     ]
 
     exported = False
-    for cfg in configs:
+    for cfg in export_configs:
         try:
             print(f"[VOLTCUT] Exporting: {cfg['preset']} | {cfg['bitrate']}")
             final_video.write_videofile(output_path, **cfg)
@@ -244,6 +254,28 @@ def edit_video(clips, beat_timeline, output_path, style_profile, music_path, ref
                 break
         except Exception as e:
             print(f"[VOLTCUT] Export failed ({cfg['preset']}): {e}")
+            # If 1080p too heavy, try 720p fallback
+            if final_video.size == (1920,1080):
+                try:
+                    print("[VOLTCUT] 1080p too heavy, trying 720p fallback...")
+                    final_video_720 = final_video.resize((1280,720))
+                    final_video_720.write_videofile(output_path, **cfg)
+                    if os.path.exists(output_path) and os.path.getsize(output_path)>100000:
+                        mb = os.path.getsize(output_path)/(1024*1024)
+                        print(f"[VOLTCUT] ----------------------------------")
+                        print(f"[VOLTCUT]   [OK] MONTAGE COMPLETE (720p Fallback)")
+                        print(f"[VOLTCUT]   Clips      : {len(loaded)}")
+                        print(f"[VOLTCUT]   Duration   : {final_video_720.duration:.1f}s")
+                        print(f"[VOLTCUT]   Size       : {mb:.1f}MB")
+                        print(f"[VOLTCUT]   Quality    : {cfg['bitrate']} {cfg['preset']}")
+                        print(f"[VOLTCUT]   Beat sync  : TRUE — kills on beats")
+                        print(f"[VOLTCUT]   Color grade: YES")
+                        print(f"[VOLTCUT]   Music      : YES")
+                        print(f"[VOLTCUT] ----------------------------------")
+                        exported = True
+                        break
+                except Exception as e2:
+                    print(f"[VOLTCUT] 720p export fallback failed: {e2}")
 
     for c in loaded:
         try: c.close()
